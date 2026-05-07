@@ -29,6 +29,9 @@ data/raw/*
 data/processed/*
 !data/processed/.gitkeep
 
+# confidential scripts
+private/*
+
 # accidental uploads
 *.csv
 *.xlsx
