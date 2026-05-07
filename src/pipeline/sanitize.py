@@ -63,8 +63,43 @@ def load_or_create_mapping(
 ) -> pd.DataFrame:
     mapping_path = Path(mapping_path)
 
+    incoming_values = set(
+        values.dropna().astype(str).unique()
+    )
+
     if mapping_path.exists():
-        return pd.read_csv(mapping_path)
+        mapping_df = pd.read_csv(mapping_path)
+
+        existing_values = set(
+            mapping_df["original_value"].astype(str)
+        )
+
+        unseen_values = sorted(
+            incoming_values - existing_values
+        )
+
+        if unseen_values:
+            current_n = len(mapping_df)
+
+            new_rows = pd.DataFrame({
+                "original_value": unseen_values,
+                "public_value": [
+                    f"{prefix}_{str(i).zfill(3)}"
+                    for i in range(current_n + 1, current_n + len(unseen_values) + 1)
+                ]
+            })
+
+            mapping_df = pd.concat(
+                [mapping_df, new_rows],
+                ignore_index=True,
+            )
+
+            assert mapping_df["original_value"].is_unique
+            assert mapping_df["public_value"].is_unique
+
+            mapping_df.to_csv(mapping_path, index=False)
+
+        return mapping_df
 
     mapping_df = build_deterministic_mapping(values, prefix)
 
