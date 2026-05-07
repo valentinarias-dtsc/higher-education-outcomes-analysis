@@ -21,16 +21,41 @@ MAPPING_SPECS = {
         "prefix": "PRG",
         "mapping_file": "program_mapping.csv",
     },
-    "program_name": {
-        "prefix": "PROGRAM",
-        "mapping_file": "program_name_mapping.csv",
-    },
-
     "campus": {
         "prefix": "CAMPUS",
         "mapping_file": "campus_mapping.csv",
     }
 }
+
+
+def public_program_name(
+        df: pd.DataFrame,
+        public_code: pd.Series,
+        program_name_column: str = "program_name",
+        ):
+    df = df.copy()
+
+    public_code = public_code.astype(str)
+    unique_codes = (
+        pd.Series(public_code.dropna().unique())
+        .sort_values()
+        .reset_index(drop=True)
+    )
+
+    def _excel_style_label(index: int) -> str:
+        label = ""
+        while index >= 0:
+            label = chr(ord("A") + (index % 26)) + label
+            index = index // 26 - 1
+        return label
+
+    mapping = {
+        code: f"Program {_excel_style_label(idx)}"
+        for idx, code in enumerate(unique_codes)
+    }
+
+    df[program_name_column] = public_code.map(mapping)
+    return df
 
 
 def build_deterministic_mapping(
@@ -162,7 +187,7 @@ def sanitize_enrollment(df: pd.DataFrame) -> pd.DataFrame:
 
 def sanitize_program_lookup(df: pd.DataFrame) -> pd.DataFrame:
     df = sanitize_column(df, "program_code")
-    df = sanitize_column(df, "program_name")
+    df = public_program_name(df, df["program_code"])
 
     return df
 
