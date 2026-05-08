@@ -18,7 +18,7 @@ ENROLLMENT_COLUMN_MAP = {
 }
 
 PROGRAM_COLUMN_MAP = {
-    "Cod_Carrera": "program_code",
+    "cod_carrera": "program_code",
     "Carrera": "program_name",
 }
 
