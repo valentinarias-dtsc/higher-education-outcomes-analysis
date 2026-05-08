@@ -22,10 +22,14 @@ from src.pipeline.validate import (
     validate_row_count,
     validate_unique_keys,
 )
+from src.config.constants import (
+    PUBLIC_DATA_DIR,
+    RAW_DATA_DIR,
+)
 
 
-RAW_DIR = Path("data/raw_private")
-PUBLIC_DIR = Path("data/public")
+RAW_DIR = Path(RAW_DATA_DIR)
+PUBLIC_DIR = Path(PUBLIC_DATA_DIR)
 
 
 
