@@ -1,4 +1,4 @@
-"""End-to-end public dataset builder."""
+"""End-to-end sanitized dataset builder."""
 
 from pathlib import Path
 
@@ -23,13 +23,13 @@ from src.pipeline.validate import (
     validate_unique_keys,
 )
 from src.config.constants import (
-    PUBLIC_DATA_DIR,
+    SANITIZED_DATA_DIR,
     RAW_DATA_DIR,
 )
 
 
 RAW_DIR = Path(RAW_DATA_DIR)
-PUBLIC_DIR = Path(PUBLIC_DATA_DIR)
+SANITIZED_DIR = Path(SANITIZED_DATA_DIR)
 
 
 
@@ -59,39 +59,47 @@ def main():
 
     print("Applying deterministic sanitization...")
 
-    enrollment_public = sanitize_enrollment(enrollment)
-    offering_public = sanitize_offering(offering)
-    programs_public = sanitize_program_lookup(programs)
+    enrollment_sanitized = sanitize_enrollment(enrollment)
+    offering_sanitized = sanitize_offering(offering)
+    programs_sanitized = sanitize_program_lookup(programs)
 
     print("Running validation checks...")
 
-    validate_row_count(enrollment, enrollment_public)
-    validate_row_count(offering, offering_public)
-    validate_row_count(programs, programs_public)
+    validate_row_count(enrollment, enrollment_sanitized)
+    validate_row_count(offering, offering_sanitized)
+    validate_row_count(programs, programs_sanitized)
 
     validate_unique_keys(
-        programs_public,
+        programs_sanitized,
         ["program_code"],
     )
+    validate_unique_keys(
+        enrollment_sanitized,
+        ["course_code", "section"],
+    )
+    validate_unique_keys(
+        offering_sanitized,
+        ["course_code", "section"],
+    )
 
-    print("Exporting public datasets...")
+    print("Exporting sanitized datasets...")
 
     export_dataset(
-        enrollment_public,
-        PUBLIC_DIR / "enrollment.parquet",
+        enrollment_sanitized,
+        SANITIZED_DIR / "enrollment.parquet",
     )
 
     export_dataset(
-        offering_public,
-        PUBLIC_DIR / "offering.parquet",
+        offering_sanitized,
+        SANITIZED_DIR / "offering.parquet",
     )
 
     export_dataset(
-        programs_public,
-        PUBLIC_DIR / "program_lookup.parquet",
+        programs_sanitized,
+        SANITIZED_DIR / "program_lookup.parquet",
     )
 
-    print("Public datasets successfully built.")
+    print("Sanitized datasets successfully built.")
 
 
 if __name__ == "__main__":

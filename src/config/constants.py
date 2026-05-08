@@ -2,6 +2,6 @@
 
 ACADEMIC_PERIOD = "2024_C1"
 
-PUBLIC_DATA_DIR = "data/public"
+SANITIZED_DATA_DIR = "data/sanitized"
 RAW_DATA_DIR = "data/raw"
 MAPPINGS_DIR = "private/mappings"

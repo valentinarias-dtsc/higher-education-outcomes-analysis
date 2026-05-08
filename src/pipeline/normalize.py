@@ -3,11 +3,9 @@
 import pandas as pd
 
 from src.config.mappings import (
-    DELIVERY_MODE_MAP,
     ENROLLMENT_COLUMN_MAP,
     OFFERING_COLUMN_MAP,
     PROGRAM_COLUMN_MAP,
-    SHIFT_MAP,
 )
 from src.utils.text import normalize_text
 
@@ -29,21 +27,4 @@ def normalize_program_lookup(df: pd.DataFrame) -> pd.DataFrame:
 
 def normalize_offering(df: pd.DataFrame) -> pd.DataFrame:
     df = normalize_column_names(df, OFFERING_COLUMN_MAP)
-#
-#    if "shift" in df.columns:
-#        df["shift"] = (
-#            df["shift"]
-#            .astype(str)
-#            .map(normalize_text)
-#            .replace(SHIFT_MAP)
-#        )
-#
-#    if "delivery_mode" in df.columns:
-#        df["delivery_mode"] = (
-#            df["delivery_mode"]
-#            .astype(str)
-#            .map(normalize_text)
-#            .replace(DELIVERY_MODE_MAP)
-#        )
-#
     return df
