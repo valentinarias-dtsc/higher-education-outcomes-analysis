@@ -7,7 +7,6 @@ from src.config.mappings import (
     OFFERING_COLUMN_MAP,
     PROGRAM_COLUMN_MAP,
 )
-from src.utils.text import normalize_text
 
 
 def normalize_column_names(df: pd.DataFrame, mapping: dict) -> pd.DataFrame:
