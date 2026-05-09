@@ -27,6 +27,17 @@ def read_csv_safe(path: str | Path) -> pd.DataFrame | None:
     except Exception as e:
         print(f"Error reading CSV file: {e}")
         return None
+    
+def read_parquet_safe(path: str | Path) -> pd.DataFrame | None:
+    try:
+        path = Path(path)
+        if not path.exists():
+            print(f"File not found: {path}")
+            return None
+        return pd.read_parquet(path)
+    except Exception as e:
+        print(f"Error reading Parquet file: {e}")
+        return None
 
 
 def export_parquet(df: pd.DataFrame, path: str | Path) -> None:
