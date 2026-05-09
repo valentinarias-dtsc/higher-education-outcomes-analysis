@@ -6,17 +6,17 @@ from src.pipeline.export import export_dataset
 from src.pipeline.ingest import (
     load_enrollment,
     load_offering,
-    load_program_lookup,
+    load_programs,
 )
 from src.pipeline.normalize import (
     normalize_enrollment,
     normalize_offering,
-    normalize_program_lookup,
+    normalize_programs,
 )
 from src.pipeline.sanitize import (
     sanitize_enrollment,
     sanitize_offering,
-    sanitize_program_lookup,
+    sanitize_programs,
 )
 from src.pipeline.validate import (
     validate_row_count,
@@ -46,22 +46,22 @@ def main():
     )
     assert offering_raw is not None, "Failed to load offering dataset"
 
-    programs_raw = load_program_lookup(
-        RAW_DIR / "program_lookup.csv"
+    programs_raw = load_programs(
+        RAW_DIR / "programs.csv"
     )
-    assert programs_raw is not None, "Failed to load program lookup dataset"
+    assert programs_raw is not None, "Failed to load programs dataset"
 
     print("Applying structural normalization...")
 
     enrollment = normalize_enrollment(enrollment_raw)
     offering = normalize_offering(offering_raw)
-    programs = normalize_program_lookup(programs_raw)
+    programs = normalize_programs(programs_raw)
 
     print("Applying deterministic sanitization...")
 
     enrollment_sanitized = sanitize_enrollment(enrollment)
     offering_sanitized = sanitize_offering(offering)
-    programs_sanitized = sanitize_program_lookup(programs)
+    programs_sanitized = sanitize_programs(programs)
 
     print("Running validation checks...")
 
@@ -96,7 +96,7 @@ def main():
 
     export_dataset(
         programs_sanitized,
-        SANITIZED_DIR / "program_lookup.parquet",
+        SANITIZED_DIR / "programs.parquet",
     )
 
     print("Sanitized datasets successfully built.")

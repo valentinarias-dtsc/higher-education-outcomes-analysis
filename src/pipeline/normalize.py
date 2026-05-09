@@ -20,7 +20,7 @@ def normalize_enrollment(df: pd.DataFrame) -> pd.DataFrame:
     return normalize_column_names(df, ENROLLMENT_COLUMN_MAP)
 
 
-def normalize_program_lookup(df: pd.DataFrame) -> pd.DataFrame:
+def normalize_programs(df: pd.DataFrame) -> pd.DataFrame:
     return normalize_column_names(df, PROGRAM_COLUMN_MAP)
 
 

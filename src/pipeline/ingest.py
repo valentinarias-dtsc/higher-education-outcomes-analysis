@@ -13,5 +13,5 @@ def load_offering(path: str | Path):
     return read_csv_safe(path)
 
 
-def load_program_lookup(path: str | Path):
+def load_programs(path: str | Path):
     return read_csv_safe(path)

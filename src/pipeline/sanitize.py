@@ -188,7 +188,7 @@ def sanitize_enrollment(df: pd.DataFrame) -> pd.DataFrame:
 
 
 
-def sanitize_program_lookup(df: pd.DataFrame) -> pd.DataFrame:
+def sanitize_programs(df: pd.DataFrame) -> pd.DataFrame:
     df = sanitize_column(df, "program_code")
     df = public_program_name(df, df["program_code"])
 
