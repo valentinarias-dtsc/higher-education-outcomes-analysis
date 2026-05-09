@@ -4,8 +4,11 @@ from pathlib import Path
 
 import pandas as pd
 
+from src.config.constants import (
+        MAPPINGS_DIR,
+)
 
-PRIVATE_MAPPINGS_DIR = Path("private/mappings")
+PRIVATE_MAPPINGS_DIR = Path(MAPPINGS_DIR)
 
 
 MAPPING_SPECS = {
