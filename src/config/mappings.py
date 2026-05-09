@@ -6,6 +6,7 @@ ENROLLMENT_COLUMN_MAP = {
     "CODIGO": "course_code",
     "CARRERA": "program_code",
     "TOTAL_ALUMNOS": "total_enrollment",
+    "INSUFICIENTE": "insufficient_count",
     "ABANDONO": "dropout_count",
     "LIBRE": "free_status_count",
     "REGULAR": "regular_completion_count",
