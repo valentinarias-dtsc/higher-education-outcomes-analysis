@@ -180,9 +180,26 @@ def sanitize_column(
     )
 
 
+def public_course_name(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+
+    def _course_name_from_code(public_code: str) -> str | None:
+        if pd.isna(public_code):
+            return None
+
+        parts = str(public_code).split("_", 1)
+        suffix = parts[1] if len(parts) == 2 else parts[-1]
+
+        return f"{MAPPING_SPECS['course_name']['prefix']} {suffix}"
+
+    df["course_name"] = df["course_code"].apply(_course_name_from_code)
+    return df
+
+
 def sanitize_enrollment(df: pd.DataFrame) -> pd.DataFrame:
     df = sanitize_column(df, "course_code")
     df = sanitize_column(df, "program_code")
+    df = public_course_name(df)
 
     return df
 
