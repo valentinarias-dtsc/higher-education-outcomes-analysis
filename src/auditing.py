@@ -59,7 +59,16 @@ def check_duplicates(
     """
 
     mask = df.duplicated(subset=subset, keep=False)
-    return df.loc[mask].sort_values(subset)
+
+    if not mask.any():
+        print(f"No duplicates found for subset: {', '.join(subset)}") 
+
+        return pd.DataFrame(columns=df.columns)
+    
+    else: 
+        print(f"Found {mask.sum()} duplicate rows for subset: {', '.join(subset)}")
+
+        return df.loc[mask].sort_values(subset)
 
 
 def check_key_uniqueness(
@@ -79,5 +88,46 @@ def check_key_uniqueness(
         "duplicate_rows": [int(duplicated)],
         "is_unique": [duplicated == 0],
     })
+
+    if duplicated > 0:
+        print(f"Found {duplicated} duplicate rows for key: {', '.join(keys)}")
+    else: 
+        print(f"Key is unique: {', '.join(keys)}")
     
     return pku
+
+
+def check_one_to_one_mapping(
+    df: pd.DataFrame,
+    key_col: str,
+    value_col: str,
+) -> pd.DataFrame:
+    """
+    Validate one-to-one consistency between two columns.
+    """
+
+    mapping_check = (
+        df.groupby(key_col)[value_col]
+        .nunique(dropna=True)
+        .reset_index(name="unique_values")
+    )
+
+    inconsistent = (
+        mapping_check
+        .query("unique_values > 1")
+        .sort_values("unique_values", ascending=False)
+        .reset_index(drop=True)
+    )
+
+    if inconsistent.empty:
+        print(
+            f"No inconsistencies detected between "
+            f"`{key_col}` and `{value_col}`."
+        )
+    else:
+        print(
+            f"{len(inconsistent)} `{key_col}` values are associated "
+            f"with multiple `{value_col}` values."
+        )
+
+    return inconsistent
