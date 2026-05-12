@@ -26,7 +26,7 @@ def inspect_schema(
         "observed_dtype": [str(df[col].dtype) for col in df.columns],
         "expected_dtype": [expected_schema.get(col) for col in df.columns],
         "non_null_count": [df[col].notna().sum() for col in df.columns],
-        "null_pct": [df[col].isna().mean() * 100 for col in df.columns],
+        "null_pct": [round(df[col].isna().mean() * 100, 2) for col in df.columns],
         "n_unique": [df[col].nunique(dropna=True) for col in df.columns],
     })
 
@@ -68,7 +68,7 @@ def check_duplicates(
     if not mask.any():
         print(f"No duplicates found for subset: {', '.join(subset)}") 
 
-        return pd.DataFrame(columns=df.columns)
+        return pd.DataFrame({})
     
     else: 
         print(f"Found {mask.sum()} duplicate rows for subset: {', '.join(subset)}")
@@ -129,13 +129,15 @@ def check_one_to_one_mapping(
             f"No inconsistencies detected between "
             f"`{key_col}` and `{value_col}`."
         )
+
+        return pd.DataFrame({})
     else:
         print(
             f"{len(inconsistent)} `{key_col}` values are associated "
             f"with multiple `{value_col}` values."
         )
 
-    return inconsistent
+        return inconsistent
 
 
 def profile_missingness(
@@ -149,7 +151,7 @@ def profile_missingness(
     missingness = pd.DataFrame({
         "column": df.columns,
         "null_count": [df[col].isna().sum() for col in df.columns],
-        "null_pct": [df[col].isna().mean() * 100 for col in df.columns],
+        "null_pct": [round(df[col].isna().mean() * 100, 2) for col in df.columns],
     })
 
     missingness["status"] = missingness["null_pct"].apply(
@@ -246,6 +248,29 @@ def check_referential_integrity(
         f"{len(right_only)} unmatched right keys"
     )
 
+    # Convert sets of key-tuples to dataframes for inspection
+    def _tuples_to_df(tuples_set: set) -> pd.DataFrame:
+        if not tuples_set:
+            return pd.DataFrame(columns=keys)
+        rows = [list(t) for t in tuples_set]
+        return pd.DataFrame(rows, columns=keys)
+
+    left_only_df = _tuples_to_df(left_only)
+    right_only_df = _tuples_to_df(right_only)
+
+    # Display sample rows (first 10) for quick inspection
+    print("\nLeft-only sample (first 10):")
+    if left_only_df.empty:
+        print("<none>")
+    else:
+        print(left_only_df.head(10).to_string(index=False))
+
+    print("\nRight-only sample (first 10):")
+    if right_only_df.empty:
+        print("<none>")
+    else:
+        print(right_only_df.head(10).to_string(index=False))
+
     results = {
         "matched_keys": len(matched),
         "left_only_keys": len(left_only),
@@ -253,6 +278,8 @@ def check_referential_integrity(
         "coverage_pct": round(coverage_pct, 2),
         "left_only_samples": list(left_only)[:10],
         "right_only_samples": list(right_only)[:10],
+        "left_only_df": left_only_df,
+        "right_only_df": right_only_df,
     }
 
     return results
