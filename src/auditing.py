@@ -6,6 +6,11 @@ import pandas as pd
 
 from src.config.contracts import FIELD_ROLES
 
+from src.config.constants import (
+    NULL_WARN_THRESHOLD,
+    TOP_N_CATEGORIES,
+    )
+
 
 def inspect_schema(
     df: pd.DataFrame,
@@ -131,3 +136,163 @@ def check_one_to_one_mapping(
         )
 
     return inconsistent
+
+
+def profile_missingness(
+    df: pd.DataFrame,
+    warn_threshold: float = NULL_WARN_THRESHOLD,
+) -> pd.DataFrame:
+    """
+    Profile missing values across dataframe columns.
+    """
+
+    missingness = pd.DataFrame({
+        "column": df.columns,
+        "null_count": [df[col].isna().sum() for col in df.columns],
+        "null_pct": [df[col].isna().mean() * 100 for col in df.columns],
+    })
+
+    missingness["status"] = missingness["null_pct"].apply(
+        lambda x:
+            "critical" if x >= 50
+            else "warning" if x >= warn_threshold * 100
+            else "ok"
+    )
+
+    missingness = (
+        missingness
+        .sort_values("null_pct", ascending=False)
+        .reset_index(drop=True)
+    )
+
+    critical_cols = (missingness["status"] == "critical").sum()
+    warning_cols = (missingness["status"] == "warning").sum()
+
+    print(
+        f"{critical_cols} critical and "
+        f"{warning_cols} warning-level columns detected."
+    )
+
+    return missingness
+
+
+def profile_categoricals(
+    df: pd.DataFrame,
+    columns: list[str],
+    top_n: int = TOP_N_CATEGORIES,
+) -> dict:
+    """
+    Profile categorical distributions and cardinality.
+    """
+
+    profiles = {}
+
+    for col in columns:
+
+        value_counts = (
+            df[col]
+            .value_counts(dropna=False)
+            .rename_axis(col)
+            .reset_index(name="count")
+        )
+
+        value_counts["pct"] = (
+            value_counts["count"] / len(df) * 100
+        )
+
+        profiles[col] = {
+            "n_unique": df[col].nunique(dropna=True),
+            "top_categories": value_counts.head(top_n),
+        }
+
+        print(
+            f"`{col}` → "
+            f"{df[col].nunique(dropna=True)} unique categories detected."
+        )
+
+    return profiles
+
+
+def check_referential_integrity(
+    left_df: pd.DataFrame,
+    right_df: pd.DataFrame,
+    keys: list[str],
+) -> dict:
+    """
+    Assess referential integrity and merge coverage between two datasets.
+    """
+
+    left_keys = set(
+        map(tuple, left_df[keys].drop_duplicates().values)
+    )
+
+    right_keys = set(
+        map(tuple, right_df[keys].drop_duplicates().values)
+    )
+
+    matched = left_keys & right_keys
+
+    left_only = left_keys - right_keys
+    right_only = right_keys - left_keys
+
+    coverage_pct = (
+        len(matched) / len(left_keys) * 100
+        if left_keys else 0
+    )
+
+    print(
+        f"{len(matched)} matched keys | "
+        f"{len(left_only)} unmatched left keys | "
+        f"{len(right_only)} unmatched right keys"
+    )
+
+    results = {
+        "matched_keys": len(matched),
+        "left_only_keys": len(left_only),
+        "right_only_keys": len(right_only),
+        "coverage_pct": round(coverage_pct, 2),
+        "left_only_samples": list(left_only)[:10],
+        "right_only_samples": list(right_only)[:10],
+    }
+
+    return results
+
+
+def validate_metric_consistency(
+    df: pd.DataFrame,
+    component_cols: list[str],
+    total_col: str,
+) -> pd.DataFrame:
+    """
+    Validate additive consistency between component metrics and a total column.
+    """
+
+    validation_df = df.copy()
+
+    validation_df["computed_total"] = (
+        validation_df[component_cols]
+        .sum(axis=1)
+    )
+
+    validation_df["difference"] = (
+        validation_df["computed_total"]
+        - validation_df[total_col]
+    )
+
+    inconsistent_rows = (
+        validation_df
+        .loc[validation_df["difference"] != 0]
+        .reset_index(drop=True)
+    )
+
+    if inconsistent_rows.empty:
+        print(
+            f"All rows satisfy metric consistency against `{total_col}`."
+        )
+    else:
+        print(
+            f"{len(inconsistent_rows)} inconsistent rows detected "
+            f"against `{total_col}`."
+        )
+
+    return inconsistent_rows
