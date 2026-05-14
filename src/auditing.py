@@ -143,6 +143,7 @@ def check_one_to_one_mapping(
 def profile_missingness(
     df: pd.DataFrame,
     warn_threshold: float = NULL_WARN_THRESHOLD,
+    verbose: bool = True,
 ) -> pd.DataFrame:
     """
     Profile missing values across dataframe columns.
@@ -169,11 +170,11 @@ def profile_missingness(
 
     critical_cols = (missingness["status"] == "critical").sum()
     warning_cols = (missingness["status"] == "warning").sum()
-
-    print(
-        f"{critical_cols} critical and "
-        f"{warning_cols} warning-level columns detected."
-    )
+    if verbose:
+        print(
+            f"{critical_cols} critical and "
+            f"{warning_cols} warning-level columns detected."
+        )
 
     return missingness
 
