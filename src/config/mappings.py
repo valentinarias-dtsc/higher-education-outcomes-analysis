@@ -81,3 +81,9 @@ WEEKDAY_TYPO_MAP = {
     "sabado": ["sabado"],
 }
 
+
+TYPO_MAPPINGS = {
+    "shift": SHIFT_TYPO_MAP,
+    "delivery_mode": DELIVERY_MODE_TYPO_MAP,
+    "weekday": WEEKDAY_TYPO_MAP,
+}
