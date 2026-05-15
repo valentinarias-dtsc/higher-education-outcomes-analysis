@@ -34,14 +34,50 @@ OFFERING_COLUMN_MAP = {
     "SEDE": "campus",
 }
 
-SHIFT_MAP = {
-    "mañana": "morning",
+SHIFT_CANONICAL_MAP = {
+    "manana": "morning",
     "tarde": "afternoon",
     "noche": "night",
 }
 
-DELIVERY_MODE_MAP = {
-    "presencial": "in_person",
+DELIVERY_MODE_CANONICAL_MAP = {
+    "presencial": "on_site",
     "virtual": "online",
-    "híbrida": "hybrid",
+    "hibrida": "hybrid",
 }
+
+WEEKDAY_CANONICAL_MAP = {
+    "lunes": "monday",
+    "martes": "tuesday",
+    "miercoles": "wednesday",
+    "jueves": "thursday",
+    "viernes": "friday",
+    "sabado": "saturday",
+}
+
+CANONICAL_MAPPINGS = {
+    "shift": SHIFT_CANONICAL_MAP,
+    "delivery_mode": DELIVERY_MODE_CANONICAL_MAP,
+    "weekday": WEEKDAY_CANONICAL_MAP,
+}
+
+SHIFT_TYPO_MAP = {
+    "manana": ["manana", "mañana", "manama"],
+    "tarde": ["tarde"],
+    "noche": ["noche"],
+}
+
+DELIVERY_MODE_TYPO_MAP = {
+    "presencial": ["presencial", "peesencial", " presencial"],
+    "virtual": ["virtual"],
+}
+
+WEEKDAY_TYPO_MAP = {
+    "lunes": ["lunes"],
+    "martes": ["martes"],
+    "miercoles": ["miercoles", "mierc"],
+    "jueves": ["jueves"],
+    "viernes": ["viernes", "mierc y viernes"],
+    "sabado": ["sabado"],
+}
+
