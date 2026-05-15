@@ -98,48 +98,53 @@ def normalize_categorical_values(
 def correct_typo_variants(
     df: pd.DataFrame,
     column: str,
-    typo_map: dict[str, list[str]],
-    unmapped: str = "ignore",
+    mappings_dict: dict[str, dict[str, list[str]]],
+    unmapped: list[str] | str = "nan",
     verbose: bool = True,
     normalize_func = None,
 ) -> pd.DataFrame:
     """
     Correct common typos in categorical values.
     """
-    if verbose:
-        print(f"Column: '{column}'")
-        print(f"Number of unique categories before typo correction: {df[column].nunique(dropna=False)}")
-    results = normalize_categorical_values(
+    df = df.copy()
+
+    for column, typo_map in mappings_dict.items():
+        if verbose:
+            print(f"Column: '{column}'")
+            print(f"Number of unique categories before typo correction: {df[column].nunique(dropna=False)}")
+    
+        df = normalize_categorical_values(
             df=df,
             column=column,
             category_map=typo_map,
             unmapped=unmapped,
             normalize_func=normalize_func,
     )
-    if verbose:
-        print(f"Number of unique categories after typo correction: {results[column].nunique(dropna=False)}")
-        print(f"{results[column].unique()}")
-    return results
+        if verbose:
+            print(f"Number of unique categories after typo correction: {df[column].nunique(dropna=False)}")
+            print(f"{results[column].unique()}\n")
+    return df
 
 
 def apply_canonical_taxonomy(
     df: pd.DataFrame,
-    column: str,
-    canonical_map: dict[str, str],
+    mappings_dict: dict[str, dict[str, str]],
     verbose: bool = True,
 ) -> pd.DataFrame:
     """
-    Map categorical values to a canonical taxonomy.
+    Map categorical columns values to a canonical taxonomy.
     """
     df = df.copy()
 
-    df[column] = df[column].astype("string")
+    for col, map in mappings_dict.items():
+        df[col] = df[col].astype("string")
 
-    df[column] = df[column].map(canonical_map)
+        df[col] = df[col].map(map)
 
-    if verbose:
-        print(f"Column: '{column}'")
-        print(f"Unique categories after applying canonical taxonomy: {df[column].unique()}")
+       if verbose:
+           print(f"Column: '{column}'")
+           print(f"Unique categories after applying canonical taxonomy: {df[column].unique()}\n")
+
     return df
 
 
