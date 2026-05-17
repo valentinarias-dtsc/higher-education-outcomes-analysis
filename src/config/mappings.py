@@ -41,7 +41,7 @@ SHIFT_CANONICAL_MAP = {
 }
 
 DELIVERY_MODE_CANONICAL_MAP = {
-    "presencial": "on_site",
+    "presencial": "on-site",
     "virtual": "online",
     "hibrida": "hybrid",
 }
