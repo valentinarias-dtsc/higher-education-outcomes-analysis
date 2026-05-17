@@ -99,7 +99,7 @@ def correct_typo_variants(
     df: pd.DataFrame,
     column: str,
     mappings_dict: dict[str, dict[str, list[str]]],
-    unmapped: list[str] | str = "nan",
+    unmapped: str = "nan",
     verbose: bool = True,
     normalize_func = None,
 ) -> pd.DataFrame:
@@ -122,7 +122,7 @@ def correct_typo_variants(
     )
         if verbose:
             print(f"Number of unique categories after typo correction: {df[column].nunique(dropna=False)}")
-            print(f"{results[column].unique()}\n")
+            print(f"{df[column].unique()}\n")
     return df
 
 
@@ -136,12 +136,12 @@ def apply_canonical_taxonomy(
     """
     df = df.copy()
 
-    for col, map in mappings_dict.items():
-        df[col] = df[col].astype("string")
+    for column, map in mappings_dict.items():
+        df[column] = df[column].astype("string")
 
-        df[col] = df[col].map(map)
+        df[column] = df[column].map(map)
 
-       if verbose:
+        if verbose:
            print(f"Column: '{column}'")
            print(f"Unique categories after applying canonical taxonomy: {df[column].unique()}\n")
 
