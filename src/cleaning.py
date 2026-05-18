@@ -12,6 +12,7 @@ def normalize_text_columns(
         df: pd.DataFrame, 
         text_cols: list | str,
         normalize_text = normalize_text,
+        verbose: bool = False,
     ) -> pd.DataFrame:
     """Normalize text columns in the dataframe using the provided normalization function."""
 
@@ -21,6 +22,9 @@ def normalize_text_columns(
         text_cols = [text_cols]
 
     df[text_cols] = df[text_cols].map(normalize_text)
+
+    if verbose:
+        print(f"Text columns normalized: {text_cols}")    
 
     return df
 
@@ -97,7 +101,6 @@ def normalize_categorical_values(
 
 def correct_typo_variants(
     df: pd.DataFrame,
-    column: str,
     mappings_dict: dict[str, dict[str, list[str]]],
     unmapped: str = "nan",
     verbose: bool = True,
