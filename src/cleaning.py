@@ -155,6 +155,7 @@ def reconcile_metric_totals(
     df: pd.DataFrame,
     component_columns: list[str],
     reported_column: str,
+    verbose = False,
     tolerance: int = 2,
     overwrite: bool = False,
 ) -> pd.DataFrame:
@@ -199,8 +200,15 @@ def reconcile_metric_totals(
         df[reported_backup_col],
     )
 
+    if verbose:
+        print(f"Metric reconciliation completed for '{reported_column}' with tolerance of {tolerance}.")
+        print(f"Component columns: {component_columns}")
+
     # Optional overwrite
     if overwrite:
         df[reported_column] = df[reconciled_col]
+        
+        if verbose:
+            print(f"Original reported values in '{reported_column}' overwritten with reconciled values.")
 
     return df
