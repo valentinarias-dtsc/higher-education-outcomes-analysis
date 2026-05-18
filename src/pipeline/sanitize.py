@@ -199,6 +199,7 @@ def public_course_name(df: pd.DataFrame) -> pd.DataFrame:
 def sanitize_enrollment(df: pd.DataFrame) -> pd.DataFrame:
     df = sanitize_column(df, "course_code")
     df = sanitize_column(df, "program_code")
+    df = sanitize_column(df, "campus")
     df = public_course_name(df)
 
     return df
