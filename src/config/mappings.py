@@ -77,7 +77,7 @@ WEEKDAY_TYPO_MAP = {
     "martes": ["martes"],
     "miercoles": ["miercoles", "mierc"],
     "jueves": ["jueves"],
-    "viernes": ["viernes", "mierc y viernes"],
+    "viernes": ["viernes"],
     "sabado": ["sabado"],
 }
 
