@@ -3,9 +3,12 @@
 # Academic period for which the data is being processed.
 ACADEMIC_PERIOD = "2024_C1"
 
-# Directory paths for raw and sanitized data, as well as mappings.
+# Directory paths for data, as well as mappings.
 SANITIZED_DATA_DIR = "data/sanitized"
 RAW_DATA_DIR = "data/raw"
+CLEAN_DATA_DIR = "data/clean"
+PROCESSED_DATA_DIR = "data/processed"
+DEMO_DATA_DIR = "data/demo"
 MAPPINGS_DIR = "private/mappings"
 
 # Random seed for reproducibility in any operations that require randomness.
