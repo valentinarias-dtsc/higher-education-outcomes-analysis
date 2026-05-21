@@ -27,13 +27,20 @@ OFFERING_TEXT_COLS = [
     "delivery_mode",
 ]
 
+
 SUM_COLS = {
     "completion_count": ["promoted_completion_count", "regular_completion_count"],
     "attrition_count": ["dropout_count", "free_status_count"],
     "adverse_outcomes_count": ["dropout_count", "insufficient_count", "free_status_count"]
 }
 
-METRIC_COMPONENT_COLS = ENROLLMENT_METRIC_COMPONENT_COLS + [
+
+METRIC_COMPONENT_COLS = [
+    "dropout_count",
+    "insufficient_count",
+    "free_status_count",
+    "promoted_completion_count",
+    "regular_completion_count",
     "completion_count",
     "attrition_count",
     "adverse_outcomes_count",
