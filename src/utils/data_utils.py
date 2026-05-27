@@ -18,35 +18,37 @@ def set_pandas_display_options():
         pd.set_option(option, value)
 
 
-def load_data(dataset: str) -> pd.DataFrame:
+def load_data(
+        stage: str = "sanitized", 
+        dataset: str | None = None,
+) -> pd.DataFrame:
     """
-    Load a dataset from the sanitized data directory.
-        dataset: The name of the dataset to load (e.g., 'enrollment', 'programs', 'offering').
+    Load a dataset from the specified data directory.
+        stage: The stage of the data pipeline (e.g., 'sanitized', 'clean', 'processed', 'demo').
+        dataset: Only applicable for 'sanitized' stage. The name of the dataset to load (e.g., 'enrollment', 'programs', 'offering').
     """
-    dataset = dataset.lower().strip()
-    path = Path(SANITIZED_DATA_DIR) / f"{dataset}.parquet"
-    return pd.read_parquet(path)
+    if stage.lower().strip() not in ['sanitized', 'clean', 'processed', 'demo']:
+        raise ValueError(f"Invalid stage: {stage}. Must be one of 'sanitized', 'clean', 'processed', 'demo'.")
+    
+    elif stage.lower().strip() == "sanitized" and not dataset:
+        raise ValueError("Dataset name must be provided when stage is 'sanitized'.")
+    
+    elif stage.lower().strip() == "sanitized" and str(dataset).lower().strip() not in ['enrollment', 'programs', 'offering']:
+        raise ValueError(f"Invalid dataset: {dataset}. Must be one of 'enrollment', 'programs', 'offering'.")
+    
+    elif stage.lower().strip() == "sanitized" and dataset is not None:
+        dataset = dataset.lower().strip()
+        path = Path(SANITIZED_DATA_DIR) / f"{dataset}.parquet"
+        return pd.read_parquet(path)
+    
+    elif stage.lower().strip() == "clean":
+        path = Path(CLEAN_DATA_DIR) / "analytical_base.parquet"
+        return pd.read_parquet(path)
 
-
-def load_clean_data() -> pd.DataFrame:
-    """
-    Load the dataset from the clean data directory.
-    """
-    path = Path(CLEAN_DATA_DIR) / "analytical_base.parquet"
-    return pd.read_parquet(path)
-
-
-def load_processed_data() -> pd.DataFrame:
-    """
-    Load the dataset from the processed data directory.
-    """
-    path = Path(PROCESSED_DATA_DIR) / "processed_data.parquet"
-    return pd.read_parquet(path)
-
-
-def load_demo_data() -> pd.DataFrame:
-    """
-    Load the dataset from the demo data directory.
-    """
-    path = Path(DEMO_DATA_DIR) / "demo_data.parquet"
-    return pd.read_parquet(path)
+    elif stage.lower().strip() == "processed":
+        path = Path(PROCESSED_DATA_DIR) / "processed_data.parquet"
+        return pd.read_parquet(path)
+    
+    else:
+        path = Path(DEMO_DATA_DIR) / "demo_data.parquet"
+        return pd.read_parquet(path)
