@@ -6,4 +6,5 @@ scikit-learn
 jupyterlab
 openpyxl
 pyarrow
-fastparquet
+pingouin
+statsmodels
