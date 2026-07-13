@@ -40,7 +40,7 @@ private/*
 *.feather
 
 # allow synthetic demo data
-!data/synthetic/*.csv
+!data/demo/*.parquet
 
 # secrets
 .env
