@@ -8,7 +8,7 @@ and field-level semantic classification.
 # ==================================================
 
 ENROLLMENT_SCHEMA = {
-    "course_name": "object",
+    "course_name": "str",
     "section": "int64",
     "total_enrollment": "int64",
     "dropout_count": "int64",
@@ -16,29 +16,29 @@ ENROLLMENT_SCHEMA = {
     "free_status_count": "int64",
     "promoted_completion_count": "int64",
     "regular_completion_count": "int64",
-    "course_code": "object",
-    "program_code": "object",
-    "shift": "object",
-    "weekday": "object",
-    "schedule_time": "object",
-    "delivery_mode": "object",
-    "campus": "object",
+    "course_code": "str",
+    "program_code": "str",
+    "shift": "str",
+    "weekday": "str",
+    "schedule_time": "str",
+    "delivery_mode": "str",
+    "campus": "str",
 }
 
 OFFERING_SCHEMA = {
-    "course_code": "object",
+    "course_code": "str",
     "section": "int64",
     "workload": "int64",
-    "schedule_time": "object",
-    "shift": "object",
-    "weekday": "object",
-    "delivery_mode": "object",
-    "campus": "object",
+    "schedule_time": "str",
+    "shift": "str",
+    "weekday": "str",
+    "delivery_mode": "str",
+    "campus": "str",
 }
 
 PROGRAMS_SCHEMA = {
-    "program_code": "object",
-    "program_name": "object",
+    "program_code": "str",
+    "program_name": "str",
 }
 
 
