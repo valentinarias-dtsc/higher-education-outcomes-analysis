@@ -24,11 +24,11 @@ def load_data(
 ) -> pd.DataFrame:
     """
     Load a dataset from the specified data directory.
-        stage: The stage of the data pipeline (e.g., 'sanitized', 'clean', 'processed', 'demo').
+        stage: The stage of the data pipeline (e.g., 'sanitized', 'clean', 'processed', 'demo base', 'demo processed').
         dataset: Only applicable for 'sanitized' stage. The name of the dataset to load (e.g., 'enrollment', 'programs', 'offering').
     """
-    if stage.lower().strip() not in ['sanitized', 'clean', 'processed', 'demo']:
-        raise ValueError(f"Invalid stage: {stage}. Must be one of 'sanitized', 'clean', 'processed', 'demo'.")
+    if stage.lower().strip() not in ['sanitized', 'clean', 'processed', 'demo base', 'demo processed']:
+        raise ValueError(f"Invalid stage: {stage}. Must be one of 'sanitized', 'clean', 'processed', 'demo base', 'demo processed'.")
     
     elif stage.lower().strip() == "sanitized" and not dataset:
         raise ValueError("Dataset name must be provided when stage is 'sanitized'.")
@@ -49,6 +49,10 @@ def load_data(
         path = Path(PROCESSED_DATA_DIR) / "processed_data.parquet"
         return pd.read_parquet(path)
     
+    elif stage.lower().strip() == "demo base":
+        path = Path(DEMO_DATA_DIR) / "demo_analytical_base.parquet"
+        return pd.read_parquet(path)
+    
     else:
-        path = Path(DEMO_DATA_DIR) / "demo_data.parquet"
+        path = Path(DEMO_DATA_DIR) / "demo_processed_data.parquet"
         return pd.read_parquet(path)
