@@ -175,17 +175,12 @@ Further details are available in `docs/methodology.md`.
 
 ## Key Findings
 
-> This section will be completed using the final validated outputs from the analytical notebooks.
-
-The final version should summarize between three and five findings, prioritizing:
-
-* the most relevant variation in academic outcome metrics;
-* differences across programs or instructional contexts;
-* effect sizes and uncertainty where appropriate;
-* findings with potential institutional relevance;
-* results that can be communicated without exposing confidential information.
-
-The section should avoid causal language because the project is based on observational and aggregated data.
+* Mean section-level completion was slightly above one-half, with substantial variation across sections.
+* Online and on-site sections had essentially equivalent completion outcomes, providing no evidence that online delivery performed worse than on-site instruction.
+* Hybrid sections had lower completion than on-site sections overall, although this difference was small and was concentrated descriptively in morning and afternoon schedules.
+* Night sections had higher completion than both morning and afternoon sections; morning and afternoon sections did not meaningfully differ from each other.
+* Apparent differences among academic programs were not statistically supported, so the aggregated results do not identify consistently higher- or lower-performing programs.
+* These patterns are associations from one term of section-level data and should guide further investigation rather than causal or student-level conclusions.
 
 ---
 
