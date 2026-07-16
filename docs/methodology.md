@@ -1,224 +1,96 @@
 # Methodology
 
-## 1. Purpose and Scope
+This document explains the analytical choices behind the project: how the source data was assessed, transformed into a section-level analytical base, converted into outcome metrics, and evaluated statistically.
 
-This project analyzes academic outcomes in higher education using institutional course-section data from the first semester of 2024.
+## Scope
 
-The unit of analysis is the **course section**. The project follows a staged workflow covering pseudonymization, data audit, cleaning, metric construction, and statistical analysis.
+Version 1.0 examines **2024 C1**, one academic term at one institution. The unit of analysis is the **course section**. Each row contains aggregated enrollment outcomes and operational characteristics; the project does not use student-level observations.
 
-Version 1.0 is cross-sectional, observational, and limited to one academic term.
+The main comparisons evaluate completion rates across delivery modes, class shifts, and academic programs.
 
----
+## Data sources
 
-## 2. Data Sources
+| Source | Analytical role |
+|---|---|
+| Enrollment | Primary source for total enrollment and five academic-outcome counts. |
+| Offering | Canonical source for workload, campus, weekday, schedule time, shift, and delivery mode. |
+| Programs | Reference source for program names. |
 
-The workflow uses three tables:
+Enrollment includes operational fields, but several are substantially incomplete. The audit therefore establishes Offering as the canonical source for those attributes.
 
-### Enrollment
+## Data audit
 
-Primary institutional table at the course-section level.
-
-It contains:
-
-- total enrollment;
-- academic outcome counts;
-- course and section identifiers;
-- partial operational metadata.
-
-### Programs
-
-Reference table containing program codes and program names.
-
-### Offering
-
-Supporting course-section table containing operational metadata such as:
-
-- campus;
-- weekday;
-- schedule time;
-- shift;
-- delivery mode.
-
-This table complements the enrollment data because several operational fields in the primary table contain substantial missingness.
-
----
-
-## 3. Pseudonymization
-
-Pseudonymization is performed before data auditing so that real data-quality issues can be documented without exposing institutional entities.
-
-The following identifiers are replaced:
-
-- campus names;
-- course names and codes;
-- program names and codes.
-
-Implementation:
-
-```text
-scripts/build_sanitized_dataset.py
-        │
-        └── src/pipeline/
-```
-
-Pseudonymization supports safe documentation, but it does not make the underlying institutional records publicly distributable.
-
-See [`confidentiality.md`](confidentiality.md) for the full publication boundary.
-
----
-
-## 4. Data Audit
-
-The audit stage reviews the sanitized source tables before corrective transformations are applied.
-
-Implementation:
-
-```text
-notebooks/01_data_audit.ipynb
-        │
-        └── src/auditing.py
-```
-
-Main checks include:
+The audit evaluates whether the three inputs can support reliable integration and analysis. Checks include:
 
 - schema and data types;
-- missing values;
-- duplicates;
-- categorical inconsistencies;
-- key integrity;
-- relationships across tables;
-- consistency between enrollment totals and outcome counts.
+- candidate-key uniqueness and duplicate records;
+- missingness and categorical consistency;
+- referential integrity and merge coverage;
+- consistency between enrollment totals and outcome components.
 
----
+The notebook records the evidence behind each subsequent cleaning rule rather than treating cleaning as an opaque preprocessing step.
 
-## 5. Data Cleaning and Consolidation
+## Cleaning and consolidation
 
-The cleaning stage integrates the three sanitized sources into a single analytical base.
+The cleaning workflow applies a small set of explicit transformations:
 
-Implementation:
+1. Remove incomplete operational fields from Enrollment.
+2. Normalize Offering text and map shift, weekday, and delivery mode to canonical categories.
+3. Convert workload to a nullable integer.
+4. Reconcile total enrollment when its difference from the five outcome components is no greater than two, retaining reconciliation flags.
+5. Join Offering by `course_code` and `section`, then Programs by `program_code`.
+6. Exclude six Enrollment records that cannot be matched to Offering and therefore lack reliable operational metadata.
 
-```text
-notebooks/02_data_cleaning.ipynb
-        │
-        └── src/cleaning.py
-```
+The resulting analytical base contains **297 of 303** sanitized Enrollment records.
 
-Main operations include:
+## Metric construction
 
-- text normalization;
-- correction of inconsistent labels;
-- categorical standardization;
-- type conversion;
-- completion of missing operational metadata from the offering table;
-- program-level enrichment;
-- consolidation at the course-section level;
-- validation of outcome counts.
+The feature-engineering stage converts raw outcome counts into measures that can be compared across sections of different sizes.
 
-Output:
+| Metric | Definition |
+|---|---|
+| `completion_count` | Promoted completions + regular completions |
+| `attrition_count` | Dropouts + free-status outcomes |
+| `adverse_outcomes_count` | Dropouts + insufficient outcomes + free-status outcomes |
+| Component rates | Each component count / total enrollment |
+| `completion_rate` | Completion count / total enrollment |
+| `attrition_rate` | Attrition count / total enrollment |
+| `adverse_outcomes_rate` | Adverse outcomes count / total enrollment |
+| `excellence_ratio` | Promoted completions / all completions |
 
-```text
-data/clean/analytical_base.parquet
-```
+`excellence_ratio` describes the composition of successful outcomes rather than the share of all enrolled students. It is represented as zero for sections with no completions. Validation checks enforce expected bounds, completeness, and additive identities.
 
----
+## Statistical analysis
 
-## 6. Metric Construction
+The analysis uses `completion_rate` as its principal outcome.
 
-The clean analytical base is transformed into the metrics required for analysis.
+### Baseline
 
-Implementation:
+Descriptive statistics, a distribution plot, and a Student's *t* confidence interval summarize the overall section-level completion rate.
 
-```text
-notebooks/03_metric_construction.ipynb
-        │
-        └── src/metric_construction.py
-```
+### Group comparisons
 
-Main derived variables include:
+Delivery mode, shift, and program are evaluated with Welch's one-way ANOVA. Welch's method is appropriate here because group sizes are unbalanced and equal variances are not assumed. Shapiro-Wilk tests assess model residuals, and significant omnibus results are followed by Games-Howell pairwise comparisons.
 
-- total completion count;
-- non-completion count;
-- completion rate;
-- promoted completion rate;
-- regular completion rate;
-- dropout rate;
-- insufficient rate;
-- free-status rate;
-- excellence rate.
+Partial eta-squared accompanies significance tests to distinguish statistical evidence from practical magnitude. Programs with fewer than ten sections are excluded from the program comparison to avoid presenting highly unstable estimates.
 
-All rate variables are validated to remain within `[0, 1]`, and component sums are checked for internal consistency.
+### Multivariate exploration
 
-The exported dataset is the direct input to the statistical analysis stage.
+A shift-by-delivery-mode heatmap explores how completion patterns vary across combinations of operational factors. This view is descriptive; the notebook does not estimate a formal interaction model.
 
----
+## Interpretation and limitations
 
-## 7. Statistical Methodology
+The project is designed as an observational, section-level case study. Its main interpretation boundaries are:
 
-The statistical analysis is implemented in:
+- one institution and one academic term;
+- no student-level characteristics or longitudinal trajectories;
+- possible dependence among sections that share courses, programs, instructors, or students;
+- bounded outcome rates and unequal group sizes;
+- potential selection effects from the six unmatched sections excluded during integration;
+- associations that should not be interpreted as causal effects.
 
-```text
-notebooks/04_analysis.ipynb
-```
+The demo data reproduces the public workflow and broad analytical patterns, but its numerical outputs are demonstration results rather than institutional estimates.
 
-The workflow includes:
+## Potential extensions
 
-- preliminary dataset characterization;
-- descriptive statistics;
-- confidence intervals for estimated means;
-- Welch's one-way ANOVA for group comparisons;
-- Games–Howell post hoc tests when omnibus tests are significant;
-- partial eta-squared for effect-size estimation;
-- residual-normality assessment;
-- interpretation of statistical and practical significance.
-
-The main analytical comparisons concern:
-
-- delivery mode;
-- shift;
-- academic program.
-
-Welch's ANOVA is used because it does not require equal variances and is appropriate for unequal group sizes.
-
-The analysis is descriptive and inferential, not causal.
-
----
-
-## 8. Reproducibility
-
-The original institutional datasets and their direct derivatives are not public.
-
-Accordingly:
-
-- pseudonymization, audit, cleaning, and synthetic generation code are visible but require private inputs;
-- metric construction and statistical analysis are publicly executable using synthetic demo data.
-
-Public workflow:
-
-```text
-Synthetic Demo Analytical Base
-        ↓
-Metric Construction
-        ↓
-Demo Metrics Dataset
-        ↓
-Statistical Analysis
-```
-
-See [`project_architecture.md`](project_architecture.md) for the complete workflow.
-
----
-
-## 9. Methodological Boundaries
-
-The conclusions should be interpreted within the following limits:
-
-- one institution;
-- one academic term;
-- course-section-level aggregation;
-- no individual student covariates;
-- observational design;
-- possible dependence across related course sections;
-- bounded outcome variables;
-- results conditional on the selected models and assumptions.
-
-Alternative approaches, including bootstrap methods, beta regression, and multilevel models, may be considered in future versions.
+The strongest next steps would be additional academic terms, multilevel or clustered models, explicit interaction modeling, sensitivity analysis for bounded outcomes, and richer course-, instructor-, section-, or student-level covariates. A future public dataset could also generate all row structure and non-outcome values synthetically.

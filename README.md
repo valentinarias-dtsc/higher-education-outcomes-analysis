@@ -1,390 +1,117 @@
 # Higher Education Outcomes Analysis
 
-An end-to-end data analytics project examining academic outcomes in higher education through a reproducible workflow built from confidential institutional data.
+An end-to-end analytics project exploring how academic outcomes vary across course sections, programs, delivery modes, and class schedules.
 
-The project covers the complete analytical lifecycle: data auditing, cleaning, metric construction, exploratory analysis, statistical inference, visualization, and communication of results.
+Built from a real institutional use case, the project demonstrates a complete analytical workflow: source-data validation, deterministic cleaning, feature engineering, statistical analysis, and clear communication of results. The implementation combines narrative notebooks with reusable Python modules so that analytical decisions remain visible without being embedded entirely in notebook code.
 
-Its central research question is:
+## The question
 
 > **How do academic outcomes vary across course sections, programs, and instructional contexts?**
 
----
+Version 1.0 examines **2024 C1**, one academic term at one institution. Each observation represents a course section with aggregated enrollment and outcome counts.
 
-## Overview
+## What makes the project technically interesting
 
-Higher Education Outcomes Analysis investigates patterns and differences in academic performance across course sections belonging to different courses, academic programs, campuses, and instructional contexts.
+- Three source tables are validated and consolidated through explicit data contracts and relationship checks.
+- Institutional identifiers are pseudonymized before analytical inspection.
+- Data-quality findings drive deterministic cleaning and reconciliation rules.
+- Reusable modules separate audit, cleaning, and metric logic from notebook presentation.
+- A public demo dataset supports execution of metric construction and statistical analysis.
+- Statistical comparisons account for unequal variances and unbalanced group sizes.
 
-The project was designed to demonstrate how a real-world institutional dataset can be transformed into a structured and documented analytical product while addressing data quality, methodological, reproducibility, and confidentiality requirements.
+## Workflow
 
-The main output is a reproducible analytical workflow. This workflow produces:
-
-1. a statistical assessment of academic outcomes;
-2. evidence that may support institutional decision-making;
-3. technical documentation explaining the analytical and preprocessing decisions.
-
-Version **1.0** covers the first academic term of 2024, identified throughout the project as **2024 C1**.
-
----
-
-## Objectives
-
-The project has five main objectives:
-
-* design and implement a complete data analytics workflow;
-* audit and transform raw institutional data into an analysis-ready dataset;
-* construct interpretable academic outcome metrics;
-* identify statistically relevant differences across institutional and instructional contexts;
-* communicate the results through reproducible notebooks, visualizations, and technical documentation.
-
----
-
-## Analytical Scope
-
-### Unit of analysis
-
-The unit of analysis is the **course section**.
-
-Each observation represents a specific section associated with:
-
-* one academic course;
-* one academic program;
-* one campus;
-* a set of instructional and institutional characteristics;
-* aggregated academic outcome metrics for that section.
-
-The dataset does not represent individual student-level observations. Consequently, the analyses and conclusions apply to variation across course sections rather than to individual student trajectories.
-
-### Time period
-
-Version **1.0** is limited to **2024 C1**.
-
-The integration of previous and subsequent academic terms is outside the scope of this release and is documented as future work.
-
----
-
-## Analytical Workflow
-
-The project follows a sequential analytical process:
-
-```text
-Raw institutional data
-        ↓
-Pseudonymization
-        ↓
-Data audit and quality assessment
-        ↓
-Cleaning and categorical standardization
-        ↓
-Metric construction and feature engineering
-        ↓
-Exploratory data analysis
-        ↓
-Statistical inference
-        ↓
-Visualization and result communication
+```mermaid
+flowchart LR
+    A["Source tables"] --> B["Pseudonymization"]
+    B --> C["Audit"]
+    C --> D["Cleaning and consolidation"]
+    D --> E["Demo dataset"]
+    E --> F["Metric construction"]
+    F --> G["Statistical analysis"]
+    G --> H["Findings and visualizations"]
 ```
 
-Each stage is implemented separately to improve traceability, maintainability, and reproducibility.
+The first stages show how private institutional sources were prepared. The committed demo data supports the public downstream workflow. See [Project architecture](docs/project_architecture.md) for the component and data-flow design.
 
-### 1. Pseudonymization
+## Analytical approach
 
-Program, course, and campus names are pseudonymized immediately after ingesting the raw institutional data.
+The analysis focuses on section-level completion rates and compares outcomes by:
 
-This transformation produces a protected version of the dataset that is then used throughout the rest of the analytical workflow, including the data audit stage.
+- delivery mode;
+- class shift;
+- academic program.
 
-This allows comparisons to remain interpretable while preventing the public identification of institutional entities.
+Methods include descriptive statistics, confidence intervals, Welch's one-way ANOVA, Games-Howell comparisons, residual checks, and partial eta-squared effect sizes. Detailed definitions and decision rules are documented in [Methodology](docs/methodology.md).
 
-### 2. Data audit
+## Key findings
 
-The initial audit evaluates the structure and quality of the pseudonymized dataset, including:
+The public analysis produces the following patterns from the project demo data:
 
-* missing values;
-* duplicated records;
-* inconsistent categories;
-* invalid or unexpected values;
-* data-type inconsistencies;
-* logical relationships between variables.
+- Average section-level completion is slightly above one-half, with substantial variation between sections.
+- Online and on-site sections have comparable completion outcomes.
+- Hybrid sections show lower completion overall, with the difference concentrated descriptively in morning and afternoon schedules.
+- Night sections have higher completion than morning and afternoon sections.
+- Observed program-level differences are not statistically supported.
 
-### 3. Data cleaning and standardization
+The demo dataset was calibrated so that these qualitative conclusions match those obtained from the private institutional analysis. Numerical estimates—including means, test statistics, effect sizes, confidence intervals, and p-values—differ between the two datasets. The technical report presents the reviewed aggregate results from the institutional analysis, while the public notebooks remain the reproducible demonstration of the same analytical workflow.
 
-The cleaning stage applies documented transformation rules to produce consistent analytical variables.
+These findings are section-level associations from one academic term, not causal or student-level conclusions.
 
-This includes:
-
-* normalization of column names;
-* categorical standardization;
-* treatment of missing and inconsistent values;
-* validation of expected ranges and relationships;
-* exclusion or correction of records according to explicit criteria.
-
-### 4. Metric construction
-
-Academic outcome metrics are constructed at the course-section level from the available institutional variables.
-
-The project documents:
-
-* the definition of each metric;
-* its numerator and denominator;
-* the treatment of missing or invalid cases;
-* the interpretation and analytical limitations of the resulting measure.
-
-### 5. Exploratory analysis
-
-Exploratory data analysis is used to examine:
-
-* metric distributions;
-* variation across programs and courses;
-* differences between instructional contexts;
-* potential outliers;
-* relationships between academic outcome indicators.
-
-### 6. Statistical inference
-
-Inferential methods are used to assess whether observed differences are compatible with systematic variation rather than sampling variability alone.
-
-### 7. Communication
-
-Results are presented through:
-
-* reproducible notebooks;
-* analytical figures;
-* a technical report;
-* an executive summary;
-* methodological and limitation documents.
-
----
-
-## Statistical Methods
-
-The inferential analysis includes:
-
-* descriptive statistics;
-* confidence intervals;
-* Welch’s analysis of variance;
-* Games–Howell post hoc comparisons;
-* Kruskal–Wallis tests;
-* effect-size estimation.
-
-Methods were selected according to the structure of the data, the analytical question, and the relevant statistical assumptions.
-
-Statistical significance is not interpreted as sufficient evidence of institutional or practical relevance. Results are evaluated together with effect sizes, uncertainty, group distributions, and the observational limitations of the dataset.
-
-Further details are available in `docs/methodology.md`.
-
----
-
-## Key Findings
-
-* Mean section-level completion was slightly above one-half, with substantial variation across sections.
-* Online and on-site sections had essentially equivalent completion outcomes, providing no evidence that online delivery performed worse than on-site instruction.
-* Hybrid sections had lower completion than on-site sections overall, although this difference was small and was concentrated descriptively in morning and afternoon schedules.
-* Night sections had higher completion than both morning and afternoon sections; morning and afternoon sections did not meaningfully differ from each other.
-* Apparent differences among academic programs were not statistically supported, so the aggregated results do not identify consistently higher- or lower-performing programs.
-* These patterns are associations from one term of section-level data and should guide further investigation rather than causal or student-level conclusions.
-
----
-
-## Repository Structure
+## Repository structure
 
 ```text
 higher-education-outcomes-analysis/
-│
 ├── data/
-│   ├── raw/
-│   ├── sanitized/
-│   ├── clean/
-│   ├── processed/
-│   └── demo/
-│
+│   ├── raw/          # local source files
+│   ├── sanitized/    # pseudonymized source tables
+│   ├── clean/        # consolidated analytical base
+│   ├── processed/    # private metric output
+│   └── demo/         # public demo datasets and data card
 ├── docs/
+│   ├── project_architecture.md
 │   ├── methodology.md
-│   ├── limitations.md
-│   ├── confidentiality.md
-│   └── version_notes.md
-│
+│   └── confidentiality.md
 ├── notebooks/
 │   ├── 01_data_audit.ipynb
 │   ├── 02_data_cleaning.ipynb
 │   ├── 03_metric_construction.ipynb
 │   └── 04_analysis.ipynb
-│
+├── scripts/
+│   └── build_sanitized_dataset.py
+├── src/              # reusable pipeline and analytical modules
 ├── reports/
-│   ├── figures/
-│   ├── analytical_report.pdf
-│   └── executive_summary.pdf
-│
-├── src/
-│
-├── .gitignore
-├── LICENSE
-├── README.md
 └── requirements.txt
 ```
 
-### Directory responsibilities
+## Explore the project
 
-* `data/`: local, processed, and synthetic data resources;
-* `notebooks/`: sequential analytical workflow and documented analysis;
-* `src/`: reusable data-processing and analytical functions;
-* `reports/`: final figures and written analytical deliverables;
-* `docs/`: methodological, confidentiality, limitation, and version documentation.
+For a quick technical review:
 
-The original institutional dataset is not included in the repository.
+1. Start with `notebooks/04_analysis.ipynb` for the questions, visualizations, and statistical results.
+2. Review `notebooks/01_data_audit.ipynb` and `02_data_cleaning.ipynb` for the data-quality workflow.
+3. Inspect `src/` for the reusable implementation behind the notebooks.
+4. Read [Project architecture](docs/project_architecture.md) for the full component map.
 
----
+To run the public downstream workflow, install the dependencies and execute the last two notebooks in order:
 
-## Reproducibility
+```bash
+python -m pip install -r requirements.txt
+```
 
-The repository is designed to make the analytical process inspectable and reproducible without redistributing confidential institutional records.
+1. `notebooks/03_metric_construction.ipynb`
+2. `notebooks/04_analysis.ipynb`
 
-It includes:
+The [demo data card](data/demo/README.md) describes the two public Parquet files. [Data confidentiality](docs/confidentiality.md) summarizes the publication boundary for the original institutional material.
 
-* the complete data-processing logic;
-* documented cleaning decisions;
-* reusable Python functions;
-* sequential analytical notebooks;
-* metric definitions;
-* statistical procedures;
-* synthetic demonstration data;
-* dependency specifications.
+## Technology
 
-Because the original dataset cannot be publicly distributed, exact reproduction of the institutional results requires authorized access to the source data.
-
-The synthetic dataset is intended to reproduce the expected schema and demonstrate the workflow. It does not reproduce the original institutional observations or necessarily preserve their empirical distributions.
-
----
-
-## Confidentiality and Data Governance
-
-The analysis was conducted using institutional data subject to confidentiality restrictions.
-
-To preserve reproducibility while respecting those restrictions, this repository provides the complete analytical workflow, documentation, and reproducible code while excluding the original dataset.
-
-The public version applies the following safeguards:
-
-* program names are pseudonymized;
-* course names are pseudonymized;
-* campus names are pseudonymized;
-* individual-level institutional records are not published;
-* raw and intermediate confidential datasets are excluded;
-* public results are presented at an aggregated analytical level;
-* synthetic data is used for workflow demonstration.
-
-Additional information is available in `docs/confidentiality.md`.
-
----
-
-## Limitations
-
-The results should be interpreted within the scope of the available data and the project design.
-
-Principal limitations include:
-
-* the analysis covers only one academic term;
-* observations are aggregated at the course-section level;
-* individual student trajectories are not available;
-* the analysis is observational and does not establish causal relationships;
-* course sections are nested within courses and programs;
-* findings may not generalize beyond the institution and period studied;
-* statistical comparisons may be affected by unequal group sizes and dependence between institutional units.
-
-A detailed discussion is available in `docs/limitations.md`.
-
----
-
-## Technology Stack
-
-### Language
-
-* Python
-
-### Core libraries
-
-* pandas
-* NumPy
-* SciPy
-* statsmodels
-* pingouin
-* Matplotlib
-* Seaborn
-
-### Development environment
-
-* Jupyter Notebook
-
----
-
-## Project Deliverables
-
-Version **1.0** includes three ordered deliverables.
-
-### 1. Reproducible analytical workflow
-
-A documented sequence covering data audit, cleaning, metric construction, exploratory analysis, statistical inference, and reporting.
-
-### 2. Statistical assessment of academic outcomes
-
-An analysis of how course-section academic outcomes vary across programs and instructional contexts.
-
-### 3. Evidence for institutional decision-making
-
-A structured set of findings that may be used to identify patterns, formulate questions, and prioritize areas for further institutional investigation.
-
-The project does not claim that the statistical results alone determine institutional decisions.
-
----
-
-## Future Work
-
-Potential extensions include:
-
-* integrating academic terms before and after 2024 C1;
-* developing longitudinal comparisons;
-* evaluating the stability of findings across periods;
-* incorporating hierarchical or mixed-effects models;
-* implementing additional sensitivity analyses;
-* expanding synthetic-data coverage;
-* developing an interactive reporting layer;
-* evaluating additional institutional and instructional variables.
-
-These extensions are not required to reproduce the scope of version **1.0**.
-
----
-
-## Documentation
-
-Project documentation is organized as follows:
-
-* `docs/methodology.md`: analytical and statistical decisions;
-* `docs/limitations.md`: scope and interpretation constraints;
-* `docs/confidentiality.md`: data-protection measures;
-* `docs/version_notes.md`: version 1.0 scope and future work;
-* `reports/analytical_report.pdf`: full technical report;
-* `reports/executive_summary.pdf`: concise summary for non-technical readers.
-
----
-
-## Version
-
-**Version 1.0**
-
-This release includes the complete workflow for the analysis of 2024 C1, from data audit to statistical result communication.
-
-See `docs/version_notes.md` for the complete release scope.
-
----
-
-## License
-
-This project is distributed under the terms specified in the `LICENSE` file.
-
-The software license does not grant access to, ownership of, or redistribution rights over the original institutional dataset.
-
----
+Python, pandas, NumPy, SciPy, statsmodels, Pingouin, Matplotlib, Seaborn, Jupyter, and Parquet.
 
 ## Author
 
-**Valentín Arias**
+**Valentín Arias** — Data Science undergraduate, Universidad Nacional Guillermo Brown
 
-Data Science undergraduate
-Universidad Nacional Guillermo Brown
+## License
+
+The project code is distributed under the terms in [LICENSE](LICENSE).
