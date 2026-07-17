@@ -1,0 +1,53 @@
+Wrote synthetic analytical base to: data\demo\demo_analytical_base.parquet
+
+Synthetic dataset validation
+------------------------------
+Rows: 297
+Programs: 13
+Courses: 131
+Mean completion: 0.5658
+Standard deviation: 0.2075
+Completion range: 0.0000 to 1.0000
+
+Delivery proportions
+delivery_mode
+hybrid     0.1886
+on-site    0.6633
+online     0.1481
+Name: proportion, dtype: float64
+
+Shift proportions
+shift
+afternoon    0.1684
+morning      0.2424
+night        0.5892
+Name: proportion, dtype: float64
+
+Mean completion by delivery mode
+delivery_mode
+hybrid     0.4827
+on-site    0.5848
+online     0.5861
+dtype: float64
+
+Mean completion by shift
+shift
+afternoon    0.5043
+morning      0.5208
+night        0.6018
+dtype: float64
+
+Welch ANOVA validation
+------------------------------
+
+delivery_mode
+Original : F=3.7693, p=0.0267, partial_eta_sq=0.0280
+Synthetic: F=5.2821, p=0.0067, partial_eta_sq=0.0374
+
+shift
+Original : F=5.5834, p=0.0048, partial_eta_sq=0.0357
+Synthetic: F=8.3954, p=0.0004, partial_eta_sq=0.0441
+
+program_name
+Original : F=1.2126, p=0.2901, partial_eta_sq=0.0429
+Synthetic: F=1.1770, p=0.3138, partial_eta_sq=0.0439

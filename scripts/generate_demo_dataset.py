@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import sys
 import numpy as np
 import pandas as pd
 import pingouin as pg
@@ -236,6 +237,10 @@ def validate_counts(synthetic: pd.DataFrame) -> None:
 
 
 def main() -> None:
+
+    f = open("reports/appendix/synthetic_generator_validations.txt", "w")
+    sys.stdout = f
+
     original = pd.read_parquet(INPUT_PATH)
     synthetic = generate_synthetic_outcomes(original)
 
