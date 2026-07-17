@@ -22,17 +22,27 @@ Version 1.0 examines **2024 C1**, one academic term at one institution. Each obs
 ## Workflow
 
 ```mermaid
-flowchart LR
-    A["Source tables"] --> B["Pseudonymization"]
-    B --> C["Audit"]
-    C --> D["Cleaning and consolidation"]
-    D --> E["Demo dataset"]
-    E --> F["Metric construction"]
-    F --> G["Statistical analysis"]
-    G --> H["Findings and visualizations"]
+flowchart TD
+    subgraph Original["Original institutional workflow"]
+        A["Source tables"] --> B["Pseudonymization"]
+        B --> C["Data audit and QA"]
+        C --> D["Cleaning and consolidation"]
+        D --> E["Feature engineering"]
+        E --> F["Statistical analysis"]
+        F --> G["Result synthesis and communication<br/>(in progress)"]
+    end
+
+    subgraph Demo["Subsequent public demo workflow"]
+        H["Demo data generation"] --> I["Demo analytical base"]
+        I --> J["Feature engineering"]
+        J --> K["Statistical analysis"]
+    end
+
+    D -->|"clean-base input"| H
+    F -.->|"public adaptation created afterward"| H
 ```
 
-The first stages show how private institutional sources were prepared. The committed demo data supports the public downstream workflow. See [Project architecture](docs/project_architecture.md) for the component and data-flow design.
+The project was first completed through feature engineering and statistical analysis on the institutional data. The demo dataset was generated afterward so that visitors can execute the same downstream logic with public inputs. Synthesis and technical communication of the institutional results remain in progress. See [Project architecture](docs/project_architecture.md) for the component and data-flow design.
 
 ## Analytical approach
 
@@ -54,7 +64,7 @@ The public analysis produces the following patterns from the project demo data:
 - Night sections have higher completion than morning and afternoon sections.
 - Observed program-level differences are not statistically supported.
 
-The demo dataset was calibrated so that these qualitative conclusions match those obtained from the private institutional analysis. Numerical estimates—including means, test statistics, effect sizes, confidence intervals, and p-values—differ between the two datasets. The technical report presents the reviewed aggregate results from the institutional analysis, while the public notebooks remain the reproducible demonstration of the same analytical workflow.
+The demo dataset was calibrated so that these qualitative conclusions match those obtained from the private institutional analysis. Numerical estimates—including means, test statistics, effect sizes, confidence intervals, and p-values—differ between the two datasets. The planned technical report will present the reviewed aggregate results from the institutional analysis, while the public notebooks remain the reproducible demonstration of the same analytical workflow.
 
 These findings are section-level associations from one academic term, not causal or student-level conclusions.
 

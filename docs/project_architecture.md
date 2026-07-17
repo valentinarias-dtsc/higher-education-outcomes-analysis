@@ -4,25 +4,23 @@ The project is organized as a staged analytical pipeline rather than a collectio
 
 ## System overview
 
+The architecture reflects two related sequences: the original institutional analysis and the public demo adaptation created after that analysis was validated.
+
+### Original institutional workflow
+
 ```mermaid
 flowchart TD
-    subgraph Preparation["Data preparation"]
-        R1[("Enrollment")]
-        R2[("Programs")]
-        R3[("Offering")]
-        S["Pseudonymization<br/>build_sanitized_dataset.py"]
-        A["Data audit<br/>01_data_audit.ipynb"]
-        C["Cleaning and consolidation<br/>02_data_cleaning.ipynb"]
-        CB[("Clean analytical base")]
-    end
-
-    subgraph Analysis["Public analytical workflow"]
-        G["Demo data generation"]
-        DB[("Demo analytical base")]
-        M["Metric construction<br/>03_metric_construction.ipynb"]
-        DM[("Demo processed data")]
-        N["Statistical analysis<br/>04_analysis.ipynb"]
-    end
+    R1[("Enrollment")]
+    R2[("Programs")]
+    R3[("Offering")]
+    S["Pseudonymization<br/>build_sanitized_dataset.py"]
+    A["Data audit and QA<br/>01_data_audit.ipynb"]
+    C["Cleaning and consolidation<br/>02_data_cleaning.ipynb"]
+    CB[("Clean analytical base")]
+    M["Feature engineering"]
+    PD[("Institutional processed data")]
+    N["Statistical analysis"]
+    R["Result synthesis and communication<br/>(in progress)"]
 
     R1 --> S
     R2 --> S
@@ -30,6 +28,25 @@ flowchart TD
     S --> A
     A --> C
     C --> CB
+    CB --> M
+    M --> PD
+    PD --> N
+    N --> R
+```
+
+### Public demo adaptation
+
+After completing the institutional analysis, the demo generator was added to make feature engineering and statistical analysis publicly executable. It starts from the private clean base, replaces the outcome counts, and then applies the same downstream analytical logic.
+
+```mermaid
+flowchart LR
+    CB[("Private clean analytical base")]
+    G["Demo data generation"]
+    DB[("Demo analytical base")]
+    M["Feature engineering<br/>03_metric_construction.ipynb"]
+    DM[("Demo processed data")]
+    N["Statistical analysis<br/>04_analysis.ipynb"]
+
     CB --> G
     G --> DB
     DB --> M
@@ -37,7 +54,7 @@ flowchart TD
     DM --> N
 ```
 
-The committed demo artifacts provide the input required to run metric construction and analysis. Earlier preparation stages remain visible through their notebooks, scripts, and reusable modules.
+The committed demo artifacts provide the input required to rerun the final two stages. Their qualitative conclusions match the institutional analysis, while numerical estimates and inferential statistics differ.
 
 ## Source relationships
 
