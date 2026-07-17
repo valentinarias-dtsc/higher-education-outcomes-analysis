@@ -14,11 +14,15 @@ import numpy as np
 import pandas as pd
 import pingouin as pg
 
+from src.config.constants import (
+    CLEAN_DATA_DIR,
+    DEMO_DATA_DIR,
+    RANDOM_SEED
+)
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-INPUT_PATH = PROJECT_ROOT / "data" / "clean" / "analytical_base.parquet"
-OUTPUT_PATH = PROJECT_ROOT / "data" / "demo" / "demo_analytical_base.parquet"
-SEED = 42
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+INPUT_PATH = Path(CLEAN_DATA_DIR) / "analytical_base.parquet"
+OUTPUT_PATH = Path(DEMO_DATA_DIR) / "demo_analytical_base.parquet"
 
 STRUCTURE_COLUMNS = [
     "course_name",
@@ -110,7 +114,7 @@ def centered_group_noise(
 
 def generate_synthetic_outcomes(df: pd.DataFrame) -> pd.DataFrame:
     """Copy structure columns and regenerate synthetic outcome counts."""
-    rng = np.random.default_rng(SEED)
+    rng = np.random.default_rng(RANDOM_SEED)
     global_mean, delivery_effect, shift_effect, residual_sd = estimate_completion_model(df)
 
     program_effects = pd.Series(
