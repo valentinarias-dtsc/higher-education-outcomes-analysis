@@ -42,6 +42,9 @@ private/*
 # allow synthetic demo data
 !data/demo/*.parquet
 
+# allow report tables
+!reports/tables/*.csv
+
 # secrets
 .env
 .env.*
