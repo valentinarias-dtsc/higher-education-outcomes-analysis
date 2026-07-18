@@ -8,22 +8,33 @@ without redistributing original observations.
 
 from __future__ import annotations
 
+from contextlib import redirect_stdout
 from pathlib import Path
-
 import sys
+
 import numpy as np
 import pandas as pd
 import pingouin as pg
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.config.constants import (
     CLEAN_DATA_DIR,
     DEMO_DATA_DIR,
     RANDOM_SEED
 )
+from src.reporting import (
+    export_report_table,
+    synthetic_dataset_validation,
+    synthetic_inferential_validation,
+)
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
 INPUT_PATH = Path(CLEAN_DATA_DIR) / "analytical_base.parquet"
 OUTPUT_PATH = Path(DEMO_DATA_DIR) / "demo_analytical_base.parquet"
+VALIDATION_LOG_PATH = Path("reports/appendix/synthetic_generator_validation.txt")
+TABLE_OUTPUT_DIR = Path("reports/tables")
 
 STRUCTURE_COLUMNS = [
     "course_name",
@@ -237,10 +248,6 @@ def validate_counts(synthetic: pd.DataFrame) -> None:
 
 
 def main() -> None:
-
-    f = open("reports/appendix/synthetic_generator_validations.txt", "w")
-    sys.stdout = f
-
     original = pd.read_parquet(INPUT_PATH)
     synthetic = generate_synthetic_outcomes(original)
 
@@ -249,8 +256,24 @@ def main() -> None:
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     synthetic.to_parquet(OUTPUT_PATH, index=False)
 
+    VALIDATION_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with VALIDATION_LOG_PATH.open("w", encoding="utf-8") as validation_log:
+        with redirect_stdout(validation_log):
+            print(f"Wrote synthetic analytical base to: {OUTPUT_PATH}")
+            print_validation_report(original, synthetic)
+
+    export_report_table(
+        synthetic_dataset_validation(original, synthetic),
+        TABLE_OUTPUT_DIR / "synthetic_dataset_validation.csv",
+    )
+    export_report_table(
+        synthetic_inferential_validation(original, synthetic),
+        TABLE_OUTPUT_DIR / "synthetic_inferential_validation.csv",
+    )
+
     print(f"Wrote synthetic analytical base to: {OUTPUT_PATH}")
-    print_validation_report(original, synthetic)
+    print(f"Wrote detailed validation log to: {VALIDATION_LOG_PATH}")
+    print(f"Wrote structured validation tables to: {TABLE_OUTPUT_DIR}")
 
 
 if __name__ == "__main__":
