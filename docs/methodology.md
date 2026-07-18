@@ -74,6 +74,10 @@ Delivery mode, shift, and program are evaluated with Welch's one-way ANOVA. Welc
 
 Partial eta-squared accompanies significance tests to distinguish statistical evidence from practical magnitude. Programs with fewer than ten sections are excluded from the program comparison to avoid presenting highly unstable estimates.
 
+For report tables, partial eta-squared is described using a single consistent rule: values below 0.01 are **negligible**, 0.01 through 0.059 are **small**, 0.06 through 0.139 are **medium**, and values of 0.14 or greater are **large**. These labels are descriptive and do not alter the inferential conclusion. Statistical significance is evaluated at alpha = 0.05 and is always retained as an explicit Boolean field alongside the numeric p-value.
+
+Raw Pingouin outputs are preserved under `reports/appendix/statistical_outputs/`. Cleaned statistical summaries, group descriptives, dataset context, and structured synthetic-validation summaries are exported to `reports/tables/` by `scripts/generate_report_tables.py`.
+
 ### Multivariate exploration
 
 A shift-by-delivery-mode heatmap explores how completion patterns vary across combinations of operational factors. This view is descriptive; the notebook does not estimate a formal interaction model.
