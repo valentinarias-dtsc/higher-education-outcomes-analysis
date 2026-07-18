@@ -1,0 +1,4 @@
+factor,w_statistic,p_value,p_value_display,normal_at_alpha_0_05,interpretation
+Delivery mode,0.99,0.039,0.0390,False,Statistically significant departure from normality
+Shift,0.991,0.0738,0.0738,True,No statistically significant departure from normality
+Academic program,0.991,0.0808,0.0808,True,No statistically significant departure from normality

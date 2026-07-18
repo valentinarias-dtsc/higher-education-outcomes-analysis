@@ -1,0 +1,4 @@
+group_a,group_b,group_a_mean,group_b_mean,mean_difference,standard_error,t_statistic,degrees_of_freedom,p_value,p_value_display,hedges_g,significant,comparison_summary
+Afternoon,Morning,0.508,0.529,-0.021,0.039,-0.541,106.57,0.8515,0.8515,-0.099,False,No statistically significant difference
+Morning,Night,0.529,0.606,-0.076,0.03,-2.51,140.58,0.035,0.0350,-0.341,True,Morning lower than night
+Afternoon,Night,0.508,0.606,-0.097,0.034,-2.84,84.72,0.0154,0.0154,-0.434,True,Afternoon lower than night

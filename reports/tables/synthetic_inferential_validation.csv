@@ -1,0 +1,7 @@
+factor,dataset,f_statistic,p_value,partial_eta_squared,significant
+Delivery mode,Original,3.769,0.0267,0.028,True
+Delivery mode,Synthetic,5.282,0.0067,0.037,True
+Shift,Original,5.583,0.0048,0.036,True
+Shift,Synthetic,8.395,0.0004,0.044,True
+Academic program,Original,1.213,0.2901,0.043,False
+Academic program,Synthetic,1.177,0.3138,0.044,False

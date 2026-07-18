@@ -1,0 +1,4 @@
+group_a,group_b,group_a_mean,group_b_mean,mean_difference,standard_error,t_statistic,degrees_of_freedom,p_value,p_value_display,hedges_g,significant,comparison_summary
+On-site,Online,0.589,0.59,-0.001,0.035,-0.038,67.45,0.9992,0.9992,-0.006,False,No statistically significant difference
+Hybrid,On-site,0.493,0.589,-0.096,0.036,-2.691,83.81,0.0232,0.0232,-0.424,True,Hybrid lower than on-site
+Hybrid,Online,0.493,0.59,-0.097,0.044,-2.188,97.22,0.0783,0.0783,-0.429,False,No statistically significant difference

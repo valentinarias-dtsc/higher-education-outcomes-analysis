@@ -1,0 +1,4 @@
+factor,numerator_df,denominator_df,f_statistic,p_value,p_value_display,partial_eta_squared,significant,effect_size_interpretation
+Delivery mode,2,91.31,3.769,0.0267,0.0267,0.028,True,Small
+Shift,2,119.15,5.583,0.0048,0.0048,0.036,True,Small
+Academic program,11,91.66,1.213,0.2901,0.2901,0.043,False,Small

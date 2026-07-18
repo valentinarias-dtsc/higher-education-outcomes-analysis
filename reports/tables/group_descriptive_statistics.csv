@@ -1,0 +1,20 @@
+factor,group,section_count,mean_completion_rate,standard_deviation,median_completion_rate,ci_95_lower,ci_95_upper
+Delivery mode,On-site,197,0.585,0.207,0.588,0.556,0.614
+Delivery mode,Online,44,0.586,0.177,0.55,0.534,0.638
+Delivery mode,Hybrid,56,0.483,0.214,0.473,0.427,0.539
+Shift,Morning,72,0.521,0.229,0.525,0.468,0.574
+Shift,Afternoon,50,0.504,0.142,0.5,0.465,0.544
+Shift,Night,175,0.602,0.207,0.611,0.571,0.633
+Academic program,Program A,3,0.333,0.167,0.36,0.144,0.522
+Academic program,Program B,24,0.478,0.168,0.467,0.41,0.545
+Academic program,Program C,19,0.577,0.214,0.562,0.481,0.673
+Academic program,Program D,31,0.594,0.192,0.604,0.527,0.662
+Academic program,Program E,31,0.598,0.21,0.6,0.525,0.672
+Academic program,Program F,27,0.545,0.23,0.524,0.458,0.632
+Academic program,Program G,29,0.586,0.16,0.565,0.528,0.644
+Academic program,Program H,17,0.459,0.265,0.429,0.333,0.585
+Academic program,Program I,28,0.57,0.212,0.551,0.491,0.648
+Academic program,Program J,12,0.561,0.222,0.566,0.436,0.687
+Academic program,Program K,20,0.616,0.174,0.626,0.539,0.692
+Academic program,Program L,12,0.592,0.172,0.54,0.494,0.689
+Academic program,Program M,44,0.591,0.226,0.582,0.524,0.658
