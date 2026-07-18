@@ -44,6 +44,7 @@ private/*
 
 # allow report tables
 !reports/tables/*.csv
+!reports/appendix/statistical_outputs/*.csv
 
 # secrets
 .env
