@@ -2,7 +2,7 @@
 
 ## Technical report on course-section completion outcomes, 2024 C1
 
-This report synthesizes the implemented analytical pipeline and the reviewed results produced from the institutional dataset. The original records are not distributed publicly. The repository instead includes a synthetic dataset that preserves the pseudonymized course-section structure and supports public execution of metric construction and statistical analysis. Because the synthetic outcomes are generated, their exact descriptive and inferential estimates differ from the institutional estimates reported here.
+This report documents the completed Version 1.0 analytical pipeline and the reviewed results produced from the institutional dataset. The original records are not distributed publicly. The repository instead includes a synthetic dataset that preserves the pseudonymized course-section structure and supports public execution of metric construction and statistical analysis. Because the synthetic outcomes are generated, their exact descriptive and inferential estimates differ from the institutional estimates reported here.
 
 ## 1. Executive Overview
 
@@ -42,6 +42,8 @@ Enrollment contains counts for dropout, insufficient performance, free status, p
 After integration, the analytical base contains 297 course sections, 131 courses, and 13 academic programs. Section counts across delivery modes and shifts are preserved in the public synthetic data. Outcome values are not: the public generator retains the pseudonymized structure, operational attributes, and total enrollment, then replaces the five outcome counts using a fixed random seed and checks that the generated counts sum to enrollment in every row.
 
 The generated public dataset summary is shown below. It provides reproducible descriptive context for the committed demo files; institutional outcome estimates used in the results section are identified separately.
+
+The underlying demo-only report outputs are `reports/tables/demo_dataset_summary.csv` and `reports/tables/demo_group_descriptive_statistics.csv`. Their values are synthetic demonstration results, not institutional estimates.
 
 | Public demo dataset metric | Value |
 |---|---:|
@@ -239,4 +241,4 @@ The project delivers a complete section-level analytical workflow for 2024 C1: d
 
 The supported institutional findings are concise. Delivery mode and shift are associated with completion, but their effect sizes are small. Online and On-site outcomes are statistically indistinguishable; Hybrid is lower than On-site, while its comparison with Online is not significant. Night sections are higher than both daytime shifts. Program means vary descriptively, but the current analysis does not support program-level differences. The shift-by-delivery heatmap suggests that lower Hybrid completion is concentrated in daytime cells, a pattern that requires formal interaction analysis before stronger interpretation.
 
-The repository demonstrates the ability to take a real, imperfect multi-source data problem from validation through communication while preserving a public reproducibility path. Realistic extensions are to add academic terms and fit clustered or multilevel models, and to test shift-by-delivery patterns formally with richer course-, instructor-, section-, or student-level covariates.
+The repository demonstrates the ability to take a real, imperfect multi-source data problem from validation through communication while preserving a public reproducibility path. Version 1.0 is complete within its one-term, section-level scope; prioritized extensions beyond that scope are summarized in [Version notes and roadmap](../docs/version_notes.md).
