@@ -1,6 +1,6 @@
 # Methodology
 
-This document explains the analytical choices behind the project: how the source data was assessed, transformed into a section-level analytical base, converted into outcome metrics, and evaluated statistically.
+This document records the methodology implemented in the completed Version 1.0 workflow: how the source data was assessed, transformed into a section-level analytical base, converted into outcome metrics, and evaluated statistically. Candidate methods for later releases are maintained separately in [Version notes and roadmap](version_notes.md).
 
 ## Scope
 
@@ -76,15 +76,15 @@ Partial eta-squared accompanies significance tests to distinguish statistical ev
 
 For report tables, partial eta-squared is described using a single consistent rule: values below 0.01 are **negligible**, 0.01 through 0.059 are **small**, 0.06 through 0.139 are **medium**, and values of 0.14 or greater are **large**. These labels are descriptive and do not alter the inferential conclusion. Statistical significance is evaluated at alpha = 0.05 and is always retained as an explicit Boolean field alongside the numeric p-value.
 
-Raw Pingouin outputs are preserved under `reports/appendix/statistical_outputs/`. Cleaned statistical summaries, group descriptives, dataset context, and structured synthetic-validation summaries are exported to `reports/tables/` by `scripts/generate_report_tables.py`.
+Raw institutional Pingouin outputs are preserved under `reports/appendix/statistical_outputs/`. Cleaned institutional inferential summaries are exported to `reports/tables/` alongside public demo descriptives and original-versus-synthetic validation tables by `scripts/generate_report_tables.py`. The exclusively synthetic descriptive outputs are named `demo_dataset_summary.csv` and `demo_group_descriptive_statistics.csv`; their `demo_` prefix distinguishes them from reviewed institutional results. The validation tables contain both original and synthetic aggregate results. This source distinction is intentional: the public notebooks produce demo estimates, while the technical report presents reviewed institutional inference and clearly labels demo-only context.
 
 ### Multivariate exploration
 
 A shift-by-delivery-mode heatmap explores how completion patterns vary across combinations of operational factors. This view is descriptive; the notebook does not estimate a formal interaction model.
 
-## Interpretation and limitations
+## Interpretation boundaries
 
-The project is designed as an observational, section-level case study. Its main interpretation boundaries are:
+The project is an observational, section-level case study. Its main interpretation boundaries are:
 
 - one institution and one academic term;
 - no student-level characteristics or longitudinal trajectories;
@@ -93,8 +93,4 @@ The project is designed as an observational, section-level case study. Its main 
 - potential selection effects from the six unmatched sections excluded during integration;
 - associations that should not be interpreted as causal effects.
 
-The demo data reproduces the public workflow and broad analytical patterns, but its numerical outputs are demonstration results rather than institutional estimates.
-
-## Potential extensions
-
-The strongest next steps would be additional academic terms, multilevel or clustered models, explicit interaction modeling, sensitivity analysis for bounded outcomes, and richer course-, instructor-, section-, or student-level covariates. A future public dataset could also generate all row structure and non-outcome values synthetically.
+The demo data reproduces the public downstream workflow and broad analytical patterns, but its numerical outputs are demonstration results rather than institutional estimates. See [Project limitations](limitations.md) for the concise interpretation boundary and [Version notes and roadmap](version_notes.md) for extensions beyond Version 1.0.

@@ -1,6 +1,6 @@
-# Demo Data Card
+# Version 1.0 Demo Data Card
 
-The demo data supports the public metric-construction and statistical-analysis notebooks.
+The demo data is the public synthetic analytical dataset for Version 1.0. It supports the metric-construction and statistical-analysis notebooks.
 
 ## Files
 
@@ -25,6 +25,10 @@ Generated outcomes are constrained to sum to `total_enrollment` and are calibrat
 
 The files are suitable for running the public notebooks, reviewing the schema, testing metric logic, and examining the statistical workflow. Results should be described as demo results rather than institutional estimates.
 
-The demo data preserves the qualitative conclusions of the reported comparisons, but it does not reproduce the institutional analysis numerically. Means, confidence intervals, test statistics, effect sizes, and p-values produced by the public notebooks therefore differ from the reviewed institutional results intended for the technical report.
+The report-table generator uses `demo_processed_data.parquet` to create `reports/tables/demo_dataset_summary.csv` and `reports/tables/demo_group_descriptive_statistics.csv`. Both tables contain exclusively synthetic demo results. Their `demo_` prefix is intentional and prevents them from being confused with the reviewed institutional summaries stored in the same report directory.
+
+The demo data preserves the qualitative conclusions of the reported comparisons, but it does not reproduce the institutional analysis numerically. Means, confidence intervals, test statistics, effect sizes, and p-values produced by the public notebooks therefore differ from the reviewed institutional results presented in the [technical report](../../reports/technical_report.md).
+
+These files begin at the analytical-base stage. They do not reproduce the original Enrollment, Offering, and Programs sources and therefore do not make sanitization, audit, cleaning, or source integration runnable from committed data.
 
 For the broader publication boundary, see [Data confidentiality](../../docs/confidentiality.md).

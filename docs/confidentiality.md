@@ -1,6 +1,6 @@
 # Data Confidentiality
 
-The original project inputs are institutional records and are not included in the public repository. Public materials focus on the implementation, documented analytical decisions, and a demo dataset that supports the final two notebook stages.
+Version 1.0 does not distribute the original institutional records. Public materials include the implementation, documented analytical decisions, reviewed aggregate outputs, and a synthetic analytical dataset that supports the final two notebook stages.
 
 ## Pseudonymization
 
@@ -10,7 +10,7 @@ Pseudonymization makes the workflow suitable for technical review, but it does n
 
 ## Published data
 
-The committed demo dataset retains pseudonymized section structure and operational fields while replacing the five academic-outcome counts with generated values. Its exact field provenance and intended use are documented in the [demo data card](../data/demo/README.md).
+The committed demo dataset retains pseudonymized section structure and operational fields while replacing the five academic-outcome counts with generated values. It begins at the analytical-base stage; it is not a synthetic copy of the three raw source tables. Its exact field provenance and intended use are documented in the [demo data card](../data/demo/README.md).
 
 The original source files, pseudonymization mappings, sanitized tables, clean institutional base, processed institutional data, and original row-level outcomes are excluded from version control.
 
