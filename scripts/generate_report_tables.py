@@ -109,10 +109,11 @@ def main() -> None:
     )
     export_report_table(
         group_descriptive_statistics(demo_processed),
-        TABLE_OUTPUT_DIR / "group_descriptive_statistics.csv",
+        TABLE_OUTPUT_DIR / "demo_group_descriptive_statistics.csv",
     )
     export_report_table(
-        dataset_summary(demo_processed), TABLE_OUTPUT_DIR / "dataset_summary.csv"
+        dataset_summary(demo_processed),
+        TABLE_OUTPUT_DIR / "demo_dataset_summary.csv",
     )
     export_report_table(
         synthetic_dataset_validation(original_base, synthetic_base),
